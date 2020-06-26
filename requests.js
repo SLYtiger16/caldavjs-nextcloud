@@ -1,4 +1,4 @@
-export default requests = {};
+let requests = {};
 
 requests.listEvents = function (args) {
   return `
@@ -79,3 +79,5 @@ requests.getChanges = function (args) {
 </d:sync-collection>
   `.trim();
 }
+
+export default requests;

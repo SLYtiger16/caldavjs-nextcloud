@@ -10,19 +10,11 @@ npm install --save caldavjs-nextcloud
 settings: {
     username: "",
     password: "",
-    access_token: "An access token to use in place of username/password (required for Google)",
-    server: "https://cloud.example.com:3333",
-    basePath: "The absolute path for caldav calls, e.g. /caldav/v2 for Google Calendar",
-    principalPath: "The relative path where principals can be found, e.g. 'p'",
+    access_token: "An access token to use in place of username/password (not used unless setup in Nextcloud)",
+    server: "https://cloud.example.com:3333 or https://cloud.example.com:3333/nextcloud", //NO trailing "/"
+    basePath: "The absolute path for caldav calls, e.g. /remote.php/dav for Nextcloud", //YES lead "/"; NO trailing "/"
+    principalPath: "The relative path where principals can be found, e.g. /principals/users",  //YES lead "/"; NO trailing "/"
   }
-let caldav = require('@datafire/caldav').create({
-  username: "",
-  password: "",
-  access_token: "",
-  server: "",
-  basePath: "",
-  principalPath: ""
-});
 
 caldav.listCalendars({}).then(data => {
   console.log(data);
@@ -39,7 +31,7 @@ Access and update calendar data using the CalDAV protocol
 
 ```js
 caldav.listEvents({
-  "filename": ""
+  "filename": "/calendars/admin/calendar-name-at-end-of-private-link" 
 })
 ```
 
@@ -55,6 +47,9 @@ caldav.listEvents({
     * start `string`
     * end `string`
     * summary `string`
+    * location `string`
+    * description `string`
+    * color `string`
 
 ### createCalendar
 
@@ -103,7 +98,7 @@ caldav.listCalendars({})
 
 ```js
 caldav.deleteCalendar({
-  "filename": ""
+  "filename": "/calendars/admin/calendar-name-at-end-of-private-link" 
 })
 ```
 
@@ -120,15 +115,15 @@ caldav.deleteCalendar({
 
 ```js
 caldav.getChanges({
-  "filename": "",
-  "syncToken": ""
+  "filename": "/calendars/admin/calendar-name-at-end-of-private-link" 
+  "syncToken": "http://sabre.io/ns/sync/90" 
 })
 ```
 
 #### Input
 * input `object`
   * filename **required** `string`
-  * syncToken **required** `string`
+  * syncToken **required** `string` //obtained from list calendars
 
 #### Output
 * output `object`
@@ -144,10 +139,14 @@ caldav.getChanges({
 
 ```js
 caldav.createEvent({
-  "start": "",
-  "end": "",
-  "summary": "",
-  "filename": ""
+  "start": "ISODateString",
+  "end": "ISODateString",
+  "summary": "title",
+  "filename": "/calendars/admin/calendar-name-at-end-of-private-link/unique-filename-for-this-event",
+  "location": "wherever",
+  "description": "tell them about it",
+  "timezone": "America/Chicago".
+  "color": "green"
 })
 ```
 
@@ -158,6 +157,10 @@ caldav.createEvent({
   * summary **required** `string`
   * organizer `string`
   * filename **required** `string`
+  * location `string`
+  * description `string`
+  * timezone `string`
+  * color `string`
 
 #### Output
 * output `string`
