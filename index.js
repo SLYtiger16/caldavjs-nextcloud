@@ -129,6 +129,8 @@ export default class Caldavjs {
    * 
    * @param {object} required 
    ** @param {string} filename required
+   ** @param {string} start
+   ** @param {string} end
    *
    * @return {array} items
    ** @return {string} etag
@@ -148,7 +150,7 @@ export default class Caldavjs {
         headers: {
           Depth: 1
         },
-        body: requests.listEvents(),
+        body: requests.listEvents(input),
       })
       .then(events => {
         return events.responses.map(evt => {

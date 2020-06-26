@@ -1,6 +1,12 @@
 let requests = {};
 
 requests.listEvents = function (args) {
+  let filter = (args.start !== null && args.end !== null) ? `
+  <c:comp-filter name="VCALENDAR">
+    <c:comp-filter name="VEVENT">
+      <c:time-range start="${args.start}" end="${args.end}" />
+    </c:comp-filter>
+  </c:comp-filter>` : `<c:comp-filter name="VCALENDAR" />`;
   return `
 <c:calendar-query xmlns:d="DAV:" xmlns:c="urn:ietf:params:xml:ns:caldav">
     <d:prop>
@@ -8,7 +14,7 @@ requests.listEvents = function (args) {
         <c:calendar-data />
     </d:prop>
     <c:filter>
-        <c:comp-filter name="VCALENDAR" />
+      ${filter}
     </c:filter>
 </c:calendar-query>
   `.trim();
