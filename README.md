@@ -182,8 +182,3 @@ caldav.deleteEvent({
 #### Output
 * output `string`
 
-
-
-## Definitions
-
-*This integration has no definitions*
