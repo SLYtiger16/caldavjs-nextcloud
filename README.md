@@ -1,10 +1,5 @@
 # CalDavJS-Nextcloud
 
-
-    "ical-generator": "^0.2.10",
-    "ical-parser": "^1.2.0",
-    "xml2js": "^0.4.19"
-
 Client library for CalDAV
 
 ## Installation and Usage
