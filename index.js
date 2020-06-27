@@ -142,6 +142,7 @@ export default class Caldavjs {
    ** @return {string} location
    ** @return {string} description
    ** @return {string} color
+   ** @return {csv-string} categories
    */
   listEvents(input) {
     let self = this;
@@ -173,6 +174,7 @@ export default class Caldavjs {
               evt.location = parsed.LOCATION;
               evt.description = parsed.DESCRIPTION;
               evt.color = parsed.COLOR;
+              evt.categories = parsed.CATEGORIES;
               evt.json = parsed;
               resolve();
             })
@@ -328,10 +330,19 @@ export default class Caldavjs {
    ** @param {string} summary required
    ** @param {string} filename required 
    ** @param {string} timezone override for settings
-   ** @param {string} organizer 
+   ** @param {object} organizer 
+   *** @param {string} name 
+   *** @param {string} email 
+   *** @param {string} mailto 
+   *** @param {string} type of @param predefined individual, group, resource, room, unknown 
    ** @param {string} location 
    ** @param {string} description 
    ** @param {string} color 
+   ** @param {array} categories of @param objects
+   *** @param {string} name 
+   *** @param {string} email 
+   *** @param {string} mailto 
+   ** @param {object} attendees  
    *
    * @return {string}
    */
@@ -346,7 +357,9 @@ export default class Caldavjs {
           organizer: input.organizer,
           description: input.description,
           location: input.location,
-          timezone: input.timezone || this.timezone
+          timezone: input.timezone || this.timezone,
+          categories: input.categories,
+          attendees: input.attendees
         }]
       });
     } catch (e) {

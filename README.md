@@ -55,6 +55,8 @@ caldav.listEvents({
     * location `string`
     * description `string`
     * color `string`
+    * categories `string` comma separated
+    * json `json` all event data which was not parsed
 
 ### createCalendar
 
@@ -150,8 +152,28 @@ caldav.createEvent({
   "filename": "/calendars/admin/calendar-name-at-end-of-private-link/unique-filename-for-this-event",
   "location": "wherever",
   "description": "tell them about it",
-  "timezone": "America/Chicago". //only to override settings
-  "color": "green"
+  "timezone": "America/Chicago", //only to override settings
+  "color": "green",
+  "categories": [
+    "awesome",
+    "tags",
+    "go",
+    "here"
+  ],
+  "attendees": [
+    {
+      "name": "name",
+      "email": "test@example.com",
+      "mailto": "test@example.com", //to override email
+      "type": "one of: individual, group, room, resource, unknown"
+    }
+  ],
+  "organizer": 
+    {
+      "name": "name",
+      "email": "test@example.com",
+      "mailto": "test@example.com", //to override email
+    }
 })
 ```
 
@@ -166,6 +188,16 @@ caldav.createEvent({
   * description `string`
   * timezone `string`
   * color `string`
+  * categories `array` of comma separated list
+  * attendees `array` of `objects`
+    * name `string` 
+    * email `string` 
+    * mailto `string` 
+    * type `string` one of "individual", "group", "room", "resource", "unknown"
+  * organizer `object`
+    * name `string` 
+    * email `string` 
+    * mailto `string` 
 
 #### Output
 * output `string`
