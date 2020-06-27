@@ -13,7 +13,8 @@ settings: {
     access_token: "An access token to use in place of username/password (not used unless setup in Nextcloud)",
     server: "https://cloud.example.com:3333 or https://cloud.example.com:3333/nextcloud", //NO trailing "/"
     basePath: "The absolute path for caldav calls, e.g. /remote.php/dav for Nextcloud", //YES lead "/"; NO trailing "/"
-    principalPath: "The relative path where principals can be found, e.g. /principals/users",  //YES lead "/"; NO trailing "/"
+    principalPath: "The relative path where principals can be found, e.g. /principals/users",  //YES lead "/"; NO trailing "/",
+    timezone: "America/Chicago" //sets the default, can be overridden in methods
   }
 
 caldav.listCalendars({}).then(data => {
@@ -62,7 +63,7 @@ caldav.listEvents({
 ```js
 caldav.createCalendar({
   "name": "",
-  "timezone": "",
+  "timezone": "", // only to override settings
   "filename": ""
 })
 ```
@@ -149,7 +150,7 @@ caldav.createEvent({
   "filename": "/calendars/admin/calendar-name-at-end-of-private-link/unique-filename-for-this-event",
   "location": "wherever",
   "description": "tell them about it",
-  "timezone": "America/Chicago".
+  "timezone": "America/Chicago". //only to override settings
   "color": "green"
 })
 ```

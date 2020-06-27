@@ -26,6 +26,7 @@ export default class Caldavjs {
     this.server = settings.server || null;
     this.basePath = settings.basePath || null;
     this.principalPath = settings.principalPath || null;
+    this.timezone = settings.timezone || null;
     this.unifyTags = (str) => {
       if (!str) return str;
       return str.toLowerCase().replace(/^\w+:/, '');
@@ -166,12 +167,13 @@ export default class Caldavjs {
             icalParser.convert(evt.calendarData, (err, parsed) => {
               if (err) return reject(err);
               parsed = parsed.VCALENDAR[0].VEVENT[0];
-              evt.start = parsed.DTSTART;
-              evt.end = parsed.DTEND;
+              evt.start = parsed[`DTSTART;TZID=${self.timezone}`];
+              evt.end = parsed[`DTEND;TZID=${self.timezone}`];
               evt.summary = parsed.SUMMARY;
               evt.location = parsed.LOCATION;
               evt.description = parsed.DESCRIPTION;
               evt.color = parsed.COLOR;
+              evt.json = parsed;
               resolve();
             })
           })
@@ -184,7 +186,7 @@ export default class Caldavjs {
    * 
    * @param {object} required 
    ** @param {string} name required
-   ** @param {string} timezone required
+   ** @param {string} timezone override for settings
    ** @param {string} fllename required
    ** @param {string} description 
    *
@@ -193,7 +195,7 @@ export default class Caldavjs {
   createCalendar(input) {
     let cal = icalGenerator({
       name: input.name,
-      timezone: input.timezone,
+      timezone: input.timezone || this.timezone,
     });
     return this.sendRequest({
         url: input.filename,
@@ -325,7 +327,7 @@ export default class Caldavjs {
    ** @param {ISODate} end required
    ** @param {string} summary required
    ** @param {string} filename required 
-   ** @param {string} timezone 
+   ** @param {string} timezone override for settings
    ** @param {string} organizer 
    ** @param {string} location 
    ** @param {string} description 
@@ -344,7 +346,7 @@ export default class Caldavjs {
           organizer: input.organizer,
           description: input.description,
           location: input.location,
-          timezone: input.timezone
+          timezone: input.timezone || this.timezone
         }]
       });
     } catch (e) {
