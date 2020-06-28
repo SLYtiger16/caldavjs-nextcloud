@@ -4,7 +4,8 @@ import icalParser from 'ical-parser';
 import icalGenerator from 'ical-generator';
 import requests from './requests';
 import xml2js from 'xml2js';
-import request from "request";
+import request from 'request';
+import moment from 'moment';
 
 /**
  * Class contructor to create the CalDav connection 
@@ -147,6 +148,8 @@ export default class Caldavjs {
    */
   listEvents(input) {
     let self = this;
+    input.start = moment(input.start).format("YYYYMMDDTHHmmss");
+    input.end = moment(input.end).format("YYYYMMDDTHHmmss");
     return this.sendRequest({
         url: input.filename,
         method: 'REPORT',
@@ -226,7 +229,6 @@ export default class Caldavjs {
    */
   listCalendars(input) {
     let self = this;
-    this
     return this.sendRequest({
         method: 'PROPFIND',
         url: self.principalPath || '',
