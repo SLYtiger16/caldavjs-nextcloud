@@ -1,6 +1,6 @@
 {
   "name": "caldavjs-nextcloud",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A lightweight nextcloud (and others) caldav javascript library.",
   "main": "index.js",
   "scripts": {

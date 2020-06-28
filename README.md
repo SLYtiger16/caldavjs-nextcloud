@@ -47,6 +47,7 @@ caldav.listEvents({
 #### Output
 * output `array`
   * items `object`
+    * allDay `boolean`
     * etag `string`
     * calendarData `string`
     * start `string`
@@ -146,6 +147,7 @@ caldav.getChanges({
 
 ```js
 caldav.createEvent({
+  "allDay": false,
   "start": "ISODateString",
   "end": "ISODateString",
   "summary": "title",
@@ -188,7 +190,8 @@ caldav.createEvent({
   * description `string`
   * timezone `string`
   * color `string`
-  * categories `array` of comma separated list
+  * categories `array` of `objects`
+    * name `string` 
   * attendees `array` of `objects`
     * name `string` 
     * email `string` 

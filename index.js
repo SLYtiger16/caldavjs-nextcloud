@@ -134,6 +134,7 @@ export default class Caldavjs {
    ** @param {string} end
    *
    * @return {array} items
+   ** @return {boolean} allDay
    ** @return {string} etag
    ** @return {string} calendarData
    ** @return {string} start
@@ -168,8 +169,9 @@ export default class Caldavjs {
             icalParser.convert(evt.calendarData, (err, parsed) => {
               if (err) return reject(err);
               parsed = parsed.VCALENDAR[0].VEVENT[0];
-              evt.start = parsed[`DTSTART;TZID=${self.timezone}`];
-              evt.end = parsed[`DTEND;TZID=${self.timezone}`];
+              evt.allDay = (parsed[`DTSTART;TZID=${self.timezone}`] || parsed[`DTSTART;VALUE=DATE`]).length === 8;
+              evt.start = parsed[`DTSTART;TZID=${self.timezone}`] || parsed[`DTSTART;VALUE=DATE`];
+              evt.end = parsed[`DTEND;TZID=${self.timezone}`] || parsed[`DTEND;VALUE=DATE`];
               evt.summary = parsed.SUMMARY;
               evt.location = parsed.LOCATION;
               evt.description = parsed.DESCRIPTION;
@@ -340,9 +342,11 @@ export default class Caldavjs {
    ** @param {string} color 
    ** @param {array} categories of @param objects
    *** @param {string} name 
+   ** @param {object} attendees  @param objects
+   *** @param {string} name 
    *** @param {string} email 
    *** @param {string} mailto 
-   ** @param {object} attendees  
+   ** @param {boolean} allDay 
    *
    * @return {string}
    */
@@ -359,7 +363,8 @@ export default class Caldavjs {
           location: input.location,
           timezone: input.timezone || this.timezone,
           categories: input.categories,
-          attendees: input.attendees
+          attendees: input.attendees,
+          allDay: input.allDay || true
         }]
       });
     } catch (e) {
