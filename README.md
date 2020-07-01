@@ -157,10 +157,10 @@ caldav.createEvent({
   "timezone": "America/Chicago", //only to override settings
   "color": "green",
   "categories": [
-    "awesome",
-    "tags",
-    "go",
-    "here"
+    { "name" : "awesome" },
+    { "name" : "tags" },
+    { "name" : "go" },
+    { "name" : "here" }
   ],
   "attendees": [
     {
