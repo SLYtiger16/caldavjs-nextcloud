@@ -4,7 +4,7 @@ import icalParser from 'ical-parser';
 import icalGenerator from 'ical-generator';
 import requests from './requests';
 import xml2js from 'xml2js';
-import request from 'request';
+import needle from 'needle';
 import moment from 'moment';
 
 /**
@@ -56,7 +56,7 @@ export default class Caldavjs {
       headers: input.headers,
     };
     return new Promise((resolve, reject) => {
-      request(req, (err, resp, body) => {
+      needle(req, (err, resp) => {
         if (err) return reject(err);
         resolve({
           statusCode: resp.statusCode,

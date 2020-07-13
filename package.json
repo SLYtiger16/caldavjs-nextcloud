@@ -1,18 +1,24 @@
 {
   "name": "caldavjs-nextcloud",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "description": "A lightweight nextcloud (and others) caldav javascript library.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/SLYtiger16/caldavjs-nextcloud.git"
+  },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
+    "@types/node": "^14.0.23",
+    "esm": "^3.2.25",
     "ical-generator": "^1.11.0",
     "ical-parser": "^1.2.0",
-    "lodash": "^4.17.15",
     "moment": "^2.27.0",
+    "needle": "^2.5.0",
     "xml2js": "^0.4.23"
   }
 }
