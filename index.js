@@ -35,7 +35,6 @@ export default class Caldavjs {
     this.XML2JS_OPTIONS = {
       tagNameProcessors: [this.unifyTags],
     };
-    this.requester = this.requester.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
     this.extractData = this.extractData.bind(this);
     this.listEvents = this.listEvents.bind(this);
@@ -47,26 +46,6 @@ export default class Caldavjs {
     this.deleteEvent = this.deleteEvent.bind(this);
   };
 
-  requester(input) {
-    let req = {
-      method: input.method,
-      url: input.url,
-      qs: input.query,
-      body: input.body,
-      headers: input.headers,
-    };
-    return new Promise((resolve, reject) => {
-      needle(req, (err, resp) => {
-        if (err) return reject(err);
-        resolve({
-          statusCode: resp.statusCode,
-          headers: resp.headers,
-          body: resp.body,
-        })
-      });
-    });
-  }
-
   async sendRequest(options) {
     let self = this;
     let url = this.server;
@@ -77,22 +56,23 @@ export default class Caldavjs {
     options.headers = options.headers || {};
     options.headers['Content-Type'] = options.headers['Content-Type'] || 'application/xml; charset=utf-8';
     if (this.access_token) {
-      options.headers.Authorization = 'Bearer ' + this.access_token;
+      options.headers['Authorization'] = 'Bearer ' + this.access_token;
     } else {
       let auth = this.username + ':' + this.password;
-      options.headers.Authorization = 'Basic ' + (new Buffer(auth.toString(), 'binary')).toString('base64');
+      options.headers['Authorization'] = 'Basic ' + (new Buffer(auth).toString('base64'));
     }
-    return this.requester(options).then(response => {
-      if (response.statusCode >= 300) {
-        throw new Error(`Status code ${response.statusCode} - ${response.body}`);
-      }
+    return needle(options.method, options.url, options.data, {
+      parse_response: false,
+      headers: options.headers
+    }).then(response => {
       const body = response.body;
-      if (!body)
-        return "Success";
+      if (response.statusCode >= 300) {
+        throw new Error(`Status code ${response.statusCode} - ${JSON.stringify(body, undefined, 2)}`);
+      }
       return new Promise((resolve, reject) => {
         xml2js.parseString(body, self.XML2JS_OPTIONS, (err, result) => {
-          if (err)
-            return reject(err);
+          if (err) return reject(err);
+          if (!result) return resolve("Success");
           let parsed = (result['multistatus']['response'] || []).map(resp => {
             let obj = {
               href: resp['href'],
@@ -106,6 +86,8 @@ export default class Caldavjs {
           });
         });
       });
+    }).catch(error => {
+      throw new Error(`Error in CalDav fetch: ${error}`);
     });
   }
 
@@ -156,7 +138,7 @@ export default class Caldavjs {
         headers: {
           Depth: 1
         },
-        body: requests.listEvents(input),
+        data: requests.listEvents(input),
       })
       .then(events => {
         return events.responses.map(evt => {
@@ -207,7 +189,7 @@ export default class Caldavjs {
     return this.sendRequest({
         url: input.filename,
         method: 'MKCALENDAR',
-        body: requests.createCalendar({
+        data: requests.createCalendar({
           data: cal.toString(),
           name: input.name,
           description: input.description
@@ -235,7 +217,7 @@ export default class Caldavjs {
         headers: {
           Depth: 0,
         },
-        body: requests.principal(),
+        data: requests.principal(),
       })
       .then(principals => {
         let href = principals.responses[0].data['current-user-principal'][0]['href'][0];
@@ -245,7 +227,7 @@ export default class Caldavjs {
           headers: {
             Depth: 0
           },
-          body: requests.calendarHome(),
+          data: requests.calendarHome(),
         })
       })
       .then(calhome => {
@@ -256,7 +238,7 @@ export default class Caldavjs {
           headers: {
             Depth: 1
           },
-          body: requests.calendarList(),
+          data: requests.calendarList(),
         })
       })
       .then(calendars => {
@@ -307,7 +289,7 @@ export default class Caldavjs {
     return this.sendRequest({
         url: input.filename,
         method: 'REPORT',
-        body: requests.getChanges({
+        data: requests.getChanges({
           syncToken: input.syncToken
         }),
       })
@@ -377,7 +359,7 @@ export default class Caldavjs {
     return this.sendRequest({
       url: input.filename,
       method: 'PUT',
-      body: string,
+      data: string,
       headers: {
         'Content-Type': 'text/calendar'
       },
