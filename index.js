@@ -28,6 +28,7 @@ export default class Caldavjs {
     this.basePath = settings.basePath || null;
     this.principalPath = settings.principalPath || null;
     this.timezone = settings.timezone || null;
+    this.parserLogging = settings.parserLogging || true;
     this.unifyTags = (str) => {
       if (!str) return str;
       return str.toLowerCase().replace(/^\w+:/, '');
@@ -151,7 +152,7 @@ export default class Caldavjs {
       .then(events => {
         return Promise.all(events.map(evt => {
           return new Promise((resolve, reject) => {
-            icalParser.convert(evt.calendarData, (err, parsed) => {
+            icalParser.convert(evt.calendarData, this.parserLogging, (err, parsed) => {
               if (err) return reject(err);
               parsed = parsed.VCALENDAR[0].VEVENT[0];
               evt.allDay = (parsed[`DTSTART;TZID=${self.timezone}`] || parsed[`DTSTART;VALUE=DATE`]).length === 8;
