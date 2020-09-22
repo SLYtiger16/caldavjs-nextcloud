@@ -15,6 +15,7 @@ settings: {
     basePath: "The absolute path for caldav calls, e.g. /remote.php/dav for Nextcloud", //YES lead "/"; NO trailing "/"
     principalPath: "The relative path where principals can be found, e.g. /principals/users",  //YES lead "/"; NO trailing "/",
     timezone: "America/Chicago" //sets the default, can be overridden in methods
+    parserLogging: true //toggles verbose logging from the calendar parser
   }
 
 caldav.listCalendars({}).then(data => {
