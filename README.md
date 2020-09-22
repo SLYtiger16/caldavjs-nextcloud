@@ -14,7 +14,7 @@ settings: {
     server: "https://cloud.example.com:3333 or https://cloud.example.com:3333/nextcloud", //NO trailing "/"
     basePath: "The absolute path for caldav calls, e.g. /remote.php/dav for Nextcloud", //YES lead "/"; NO trailing "/"
     principalPath: "The relative path where principals can be found, e.g. /principals/users",  //YES lead "/"; NO trailing "/",
-    timezone: "America/Chicago" //sets the default, can be overridden in methods
+    timezone: "America/Chicago", //sets the default, can be overridden in methods
     parserLogging: true //toggles verbose logging from the calendar parser
   }
 
