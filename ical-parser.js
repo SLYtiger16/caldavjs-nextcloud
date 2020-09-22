@@ -5,7 +5,7 @@ var async = require("async"),
 	lineReader,
 	stream;
 
-function convert(fileData, callback) {
+function convert(fileData, logging, callback) {
 	if(typeof callback !== "function") {
 		throw new Error("iCAL-PARSER: No callback provided. Aborting!!");
 		return console.error("No callback provided. Aborting!!");
@@ -15,10 +15,10 @@ function convert(fileData, callback) {
 		return callback(new Error("iCAL-PARSER: Invalid file data passed. Aborting!!"));
 	}
 
-	prepare(fileData, callback);
+	prepare(fileData, logging, callback);
 }
 
-function prepare(fileData, callback) {
+function prepare(fileData, logging, callback) {
 	var _obj = {},
 		SPACE = " ",
 		lines = fileData.split(/\r\n|\n|\r/),
@@ -59,17 +59,17 @@ function prepare(fileData, callback) {
 		if(startKeys.length) {
 			objArr.push(_obj);
 		}
-		process(startKeys, endKeys, objArr, callback);
+		process(startKeys, endKeys, objArr, logging, callback);
 	});
 }
 
-function process(startKeys, endKeys, objArr, callback) {
+function process(startKeys, endKeys, objArr, logging, callback) {
 	var result = {},
 		len = startKeys.length,
 		startIdx = -1,
 		i = 0;	
 
-		console.log("processing..");
+		if (logging) console.log("processing..");
 	var iterator = function() {
 		return i < len;
 	};	
@@ -107,9 +107,9 @@ function process(startKeys, endKeys, objArr, callback) {
 		result[startKeys[0]] = [objArr[0]];
 
 		if(objArr.length && objArr[0].VEVENT && objArr[0].VEVENT.length) {
-			console.info("iCAL-PARSER:", objArr[0].VEVENT.length, "events parsed");
+			if (logging) console.info("iCAL-PARSER:", objArr[0].VEVENT.length, "events parsed");
 		} else {
-			console.info("iCAL-PARSER: 0 events found");
+			if (logging) console.info("iCAL-PARSER: 0 events found");
 		}
 		
 		return callback(err, result);
