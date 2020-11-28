@@ -28,7 +28,7 @@ export default class Caldavjs {
     this.basePath = settings.basePath || null;
     this.principalPath = settings.principalPath || null;
     this.timezone = settings.timezone || null;
-    this.parserLogging = settings.parserLogging || true;
+    this.parserLogging = typeof(settings.parserLogging) == 'undefined'? true : settings.parserLogging;
     this.unifyTags = (str) => {
       if (!str) return str;
       return str.toLowerCase().replace(/^\w+:/, '');
