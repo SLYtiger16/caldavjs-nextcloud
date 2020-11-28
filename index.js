@@ -155,9 +155,9 @@ export default class Caldavjs {
             icalParser.convert(evt.calendarData, this.parserLogging, (err, parsed) => {
               if (err) return reject(err);
               parsed = parsed.VCALENDAR[0].VEVENT[0];
-              evt.allDay = (parsed[`DTSTART;TZID=${self.timezone}`] || parsed[`DTSTART;VALUE=DATE`]).length === 8;
-              evt.start = parsed[`DTSTART;TZID=${self.timezone}`] || parsed[`DTSTART;VALUE=DATE`];
-              evt.end = parsed[`DTEND;TZID=${self.timezone}`] || parsed[`DTEND;VALUE=DATE`];
+              evt.allDay = (parsed[`DTSTART;TZID=${self.timezone}`] || parsed[`DTSTART;VALUE=DATE`] || parsed[`DTSTART`]).length === 8;
+              evt.start = parsed[`DTSTART;TZID=${self.timezone}`] || parsed[`DTSTART;VALUE=DATE`] || parsed[`DTSTART`];
+              evt.end = parsed[`DTEND;TZID=${self.timezone}`] || parsed[`DTEND;VALUE=DATE`] || parsed[`DTSTART`];
               evt.summary = parsed.SUMMARY;
               evt.location = parsed.LOCATION;
               evt.description = parsed.DESCRIPTION;
